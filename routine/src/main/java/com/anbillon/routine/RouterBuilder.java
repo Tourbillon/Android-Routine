@@ -111,8 +111,6 @@ final class RouterBuilder {
       intent.putExtra(name, Boolean.parseBoolean(value.toString()));
     } else if (rawParameterType == boolean[].class) {
       intent.putExtra(name, (boolean[]) value);
-    } else if (rawParameterType == Bundle.class) {
-      intent.putExtra(name, (Bundle) value);
     } else if (rawParameterType == byte.class) {
       intent.putExtra(name, Byte.parseByte(value.toString()));
     } else if (rawParameterType == byte[].class) {
@@ -139,6 +137,8 @@ final class RouterBuilder {
       intent.putExtra(name, (int[]) value);
     } else if (rawParameterType == long.class) {
       intent.putExtra(name, Long.parseLong(value.toString()));
+    } else if (rawParameterType == long[].class) {
+      intent.putExtra(name, (long[]) value);
     } else if (rawParameterType == short.class) {
       intent.putExtra(name, Short.parseShort(value.toString()));
     } else if (rawParameterType == short[].class) {
@@ -147,6 +147,8 @@ final class RouterBuilder {
       intent.putExtra(name, value.toString());
     } else if (rawParameterType == String[].class) {
       intent.putExtra(name, (String[]) value);
+    } else if (rawParameterType == Bundle.class) {
+      intent.putExtra(name, (Bundle) value);
     } else if (rawParameterType == Parcelable.class) {
       intent.putExtra(name, (Parcelable) value);
     } else if (rawParameterType == Parcelable[].class) {

@@ -13,9 +13,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * the app com.android.contacts would use names like "com.android.contacts.ShowAll".
  * <p>
  * For example:
- * <pre><value>
+ * <pre><code>
  *   void navigateToContacts(@Extra("com.android.id") long id);
- * </value></pre>
+ * </code></pre>
  *
  * @author Vincent Cheung (coolingfall@gmail.com)
  * @see ExtraSet
