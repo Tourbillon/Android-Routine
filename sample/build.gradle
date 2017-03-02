@@ -28,5 +28,8 @@ dependencies {
   compile 'com.android.support:appcompat-v7:25.1.0'
   compile project(':routine')
   compile project(':routine-logging-interceptor')
-  testCompile 'junit:junit:4.12'
+
+  testCompile rootProject.ext.junit
+  testCompile rootProject.ext.mockito
+  testCompile rootProject.ext.robolectric
 }
