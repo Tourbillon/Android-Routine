@@ -13,14 +13,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * prefix, for example the app com.android.contacts would use keys like "com.android.contacts.ID".
  * <p>
  * Simple example:
- * <pre><value>
+ * <pre><code>
  *   void navigateToContacts(@ExtraSet("com.android.IDS") Bundle ids);
- * </value></pre>
+ * </code></pre>
  * If there's only one set of extended data, then you can just ignore:
- * <pre><value>
+ * <pre><code>
  * void navigateToContacts(@ExtraSet Bundle ids);
  * void navigateToContacts(@ExtraSet("com.android.ORIGIN") Intent intent);
- * </value></pre>
+ * </code></pre>
  *
  * @author Vincent Cheung (coolingfall@gmail.com)
  * @see Extra

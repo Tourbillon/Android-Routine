@@ -9,6 +9,10 @@ android {
     targetSdkVersion rootProject.ext.targetSdkVersion
   }
 
+  lintOptions {
+    abortOnError false
+  }
+
   dependencies {
     compile project(':routine')
 

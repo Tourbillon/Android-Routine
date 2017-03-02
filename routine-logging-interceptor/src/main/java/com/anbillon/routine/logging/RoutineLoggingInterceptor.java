@@ -2,9 +2,13 @@ package com.anbillon.routine.logging;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import com.anbillon.routine.Interceptor;
 import com.anbillon.routine.Router;
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.Arrays;
 
 /**
  * A Routine interceptor which logs router call information.
@@ -62,7 +66,9 @@ public final class RoutineLoggingInterceptor implements Interceptor {
       for (int k = 0; k < keys.length; k++) {
         params.append(keys[k]);
         params.append("=");
-        params.append(extras.get(keys[k].toString()));
+        Object value = extras.get(keys[k].toString());
+        params.append(valueToString(value));
+
         if (k < keys.length - 1) {
           params.append(", ");
         }
@@ -74,6 +80,45 @@ public final class RoutineLoggingInterceptor implements Interceptor {
     logger.log("<-- END" + ' ' + router.method());
 
     return chain.proceed(router);
+  }
+
+  private String valueToString(Object value) {
+    if (value == null) {
+      return null;
+    }
+
+    if (!value.getClass().isArray()) {
+      return value.toString();
+    }
+
+    Type type = value.getClass();
+    if (type == boolean[].class) {
+      return Arrays.toString((boolean[]) value);
+    } else if (type == byte[].class) {
+      return Arrays.toString((byte[]) value);
+    } else if (type == char[].class) {
+      return Arrays.toString((char[]) value);
+    } else if (type == CharSequence[].class) {
+      return Arrays.toString((CharSequence[]) value);
+    } else if (type == double[].class) {
+      return Arrays.toString((double[]) value);
+    } else if (type == float[].class) {
+      return Arrays.toString((float[]) value);
+    } else if (type == int[].class) {
+      return Arrays.toString((int[]) value);
+    } else if (type == short[].class) {
+      return Arrays.toString((short[]) value);
+    } else if (type == long[].class) {
+      return Arrays.toString((long[]) value);
+    } else if (type == String[].class) {
+      return Arrays.toString((String[]) value);
+    } else if (type == Parcelable[].class) {
+      return Arrays.toString((Parcelable[]) value);
+    } else if (type == Serializable[].class) {
+      return Arrays.toString((Serializable[]) value);
+    } else {
+      return value.toString();
+    }
   }
 
   public enum Level {
