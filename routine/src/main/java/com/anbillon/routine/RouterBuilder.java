@@ -118,7 +118,7 @@ final class RouterBuilder {
     } else if (rawParameterType == char.class) {
       intent.putExtra(name, value.toString().toCharArray()[0]);
     } else if (rawParameterType == char[].class) {
-      intent.putExtra(name, value.toString().toCharArray());
+      intent.putExtra(name, (char[]) value);
     } else if (rawParameterType == CharSequence.class) {
       intent.putExtra(name, (CharSequence) value);
     } else if (rawParameterType == CharSequence[].class) {
