@@ -1,0 +1,30 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:2.2.3'
+  }
+}
+
+allprojects {
+  repositories {
+    jcenter()
+  }
+}
+
+task clean(type: Delete) {
+  delete rootProject.buildDir
+}
+
+ext {
+  buildToolsVersion = '25.0.2'
+  compileSdkVersion = 25
+  minSdkVersion = 10
+  targetSdkVersion = 25
+
+  appcompatV7 = 'com.android.support:appcompat-v7:25.1.0'
+
+  robolectric = 'org.robolectric:robolectric:3.1.2'
+  junit = 'junit:junit:4.12'
+}

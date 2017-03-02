@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<script type="text/javascript">
+  function onClick() {
+    window.location = 'demo://test/login?id=2'
+  }
+
+  function takePhone() {
+    window.location = 'tel://10086'
+  }
+
+</script>
+
+<input type="button" value="跳转Activity" onclick="onClick()"/>
+<input type="button" value="跳转系统URI" onclick="takePhone()"/>
+</body>
