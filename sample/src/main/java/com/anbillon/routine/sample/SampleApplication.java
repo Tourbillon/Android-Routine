@@ -16,7 +16,8 @@ public final class SampleApplication extends Application {
   @Override public void onCreate() {
     super.onCreate();
 
-    Routine routine = new Routine.Builder().addInterceptor(new RoutineAuthInterceptor())
+    Routine routine = new Routine.Builder().addFilter(new SchemeFilter())
+        .addInterceptor(new RoutineAuthInterceptor())
         .addInterceptor(new IdentityInterceptor())
         .addInterceptor(
             new RoutineLoggingInterceptor().setLevel(RoutineLoggingInterceptor.Level.ALL))

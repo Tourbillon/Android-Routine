@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     findViewById(R.id.btn_scheme_url).setOnClickListener(this);
     findViewById(R.id.btn_page_name).setOnClickListener(this);
     findViewById(R.id.btn_page).setOnClickListener(this);
+    findViewById(R.id.btn_scheme_filter).setOnClickListener(this);
     findViewById(R.id.btn_html_scheme).setOnClickListener(this);
     findViewById(R.id.btn_not_found).setOnClickListener(this);
 
@@ -36,6 +37,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
       case R.id.btn_page:
         navigator.navigateToDemoWithPage(this);
+        break;
+
+      case R.id.btn_scheme_filter:
+        navigator.navigateWithFilters(this);
         break;
 
       case R.id.btn_html_scheme:

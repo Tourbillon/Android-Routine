@@ -18,7 +18,7 @@ import static com.anbillon.routine.Utils.getRawType;
  */
 final class RouterBuilder {
   private final Intent intent;
-  private String method;
+  private Method method;
   private String target;
   private String schemeUrl;
   private String pageName;
@@ -39,7 +39,7 @@ final class RouterBuilder {
    */
   void schemeUrl(String schemeUrl) {
     this.schemeUrl = schemeUrl;
-    this.method = "SCHEME URL";
+    this.method = Method.SCHEME_URL;
     this.target = schemeUrl;
   }
 
@@ -50,7 +50,7 @@ final class RouterBuilder {
    */
   void pageName(String pageName) {
     this.pageName = pageName;
-    this.method = "PAGE NAME";
+    this.method = Method.PAGE_NAME;
     this.target = pageName;
   }
 
@@ -61,7 +61,7 @@ final class RouterBuilder {
    */
   void page(Class<?> page) {
     this.page = page;
-    this.method = "PAGE";
+    this.method = Method.PAGE;
     this.target = page.getCanonicalName();
   }
 

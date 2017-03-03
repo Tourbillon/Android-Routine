@@ -4,6 +4,7 @@
   <string name="with_scheme_url">使用@SchemeUrl跳转</string>
   <string name="with_page_name">使用@PageName跳转</string>
   <string name="with_page">使用@Page跳转</string>
+  <string name="with_scheme_filter">使用@SchemeUrl匹配Filters跳转</string>
   <string name="with_scheme_url_html">WebView使用Scheme Url跳转</string>
   <string name="with_not_found">跳转出错</string>
 

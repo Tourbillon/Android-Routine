@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.anbillon.routine.Utils.checkNotNull;
 
 /**
  * A router. Instances of this class are immutable.
@@ -13,7 +14,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * @author Vincent Cheung (coolingfall@gmail.com)
  */
 public final class Router {
-  private final String method;
+  private final Method method;
   private final String target;
   private final String schemeUrl;
   private final String pageName;
@@ -30,15 +31,15 @@ public final class Router {
     this.pageName = builder.pageName;
     this.page = builder.page;
     this.errorPage = builder.errorPage;
-    this.context = builder.context;
-    this.intent = builder.intent;
+    this.context = checkNotNull(builder.context, "context == null");
+    this.intent = checkNotNull(builder.intent, "intent == null");
     this.requestCode = builder.requestCode;
   }
 
   /**
    * Start current router call to open new page.
    */
-  public void start() {
+  public boolean start() {
     boolean isActivity = context instanceof Activity;
 
     try {
@@ -55,10 +56,13 @@ public final class Router {
         }
       }
     } catch (ActivityNotFoundException ignore) {
+      return false;
     }
+
+    return true;
   }
 
-  public String method() {
+  public Method method() {
     return method;
   }
 
@@ -99,7 +103,7 @@ public final class Router {
   }
 
   public static final class Builder {
-    private String method;
+    private Method method;
     private String target;
     private String schemeUrl;
     private String pageName;
@@ -124,7 +128,7 @@ public final class Router {
       this.requestCode = call.requestCode;
     }
 
-    Builder method(String method) {
+    Builder method(Method method) {
       this.method = method;
       return this;
     }

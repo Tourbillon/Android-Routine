@@ -308,4 +308,10 @@ public final class ExtrasTest {
     assertEquals("Vincent", result.get(0).name);
     assertEquals("Cously", result.get(1).name);
   }
+
+  @Test public void testSchemeUrlExtra() throws Exception {
+    navigator.withSchemeUrl(context);
+    String id = nextIntent().getStringExtra("id");
+    assertEquals("2", id);
+  }
 }

@@ -1,5 +1,8 @@
 package com.anbillon.routine;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
@@ -136,5 +139,28 @@ final class Utils {
         + type
         + "> is of type "
         + type.getClass().getName());
+  }
+
+  /**
+   * Resolve the {@link Intent} into an {@link ActivityInfo} describing the activity that should
+   * execute the intent.
+   *
+   * @param context context to use
+   * @param intent intent to resolve
+   * @return {@link ActivityInfo}
+   */
+  static ActivityInfo resolveActivityInfo(Context context, Intent intent) {
+    return intent.resolveActivityInfo(context.getPackageManager(), 0);
+  }
+
+  /**
+   * Resolve a scheme url to one without parameters.
+   *
+   * @param schemeUrl origin scheme url
+   * @return resolved scheme url
+   */
+  static String resolveSchemeUrl(String schemeUrl) {
+    int index = schemeUrl.lastIndexOf("?");
+    return index > 0 ? schemeUrl.substring(0, index) : schemeUrl;
   }
 }
