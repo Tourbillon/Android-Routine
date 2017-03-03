@@ -1,3 +1,4 @@
+
 Routine
 =======
 An android router which can support scheme url and native page.
@@ -61,7 +62,7 @@ navigator.navigateToDemoWithSchemeUrl(this);
 navigator.navigateToDemoWithPageName(this, "3", REQUEST_CODE);
 navigator.navigateToDemoWithPage(this);
 ```
-* If you want to navigation with @SchemeUrl, you have to add some extra properties in AndroidManifest.xml:
+* If you want to navigation with @SchemeUrl, you need to add some extra properties in AndroidManifest.xml:
 ``` xml
 <activity android:name=".ui.DemoActivity">
       <intent-filter>
@@ -77,6 +78,22 @@ navigator.navigateToDemoWithPage(this);
             />
       </intent-filter>
 </activity>
+```
+* However, it's not safe to add scheme in AndroidManifest.xml. Maybe you only want to make navigationjust inside in your app , then you  can add `Filter` to routine, one scheme url can map to many page, one page can map to many scheme urls too. The routine will open the first page which is available:
+``` java
+public final class SchemeFilter implements Filter {
+
+  @Override public Matcher filter(Chain chain) {
+    Matcher matcher = chain.matcher();
+    Matcher.Builder builder = matcher.newBuilder();
+    builder.addPage("demo://test/check", FilterActivity.class)
+        .addPageName("demo://test/check", "com.msxf.module.routine.sample.ui.FilterActivity");
+
+    return chain.proceed(builder.build());
+  }
+  
+/* add in routine */
+Routine routine = new Routine.Builder().addFilter(new SchemeFilter()).build()
 ```
 * If you want navigate to a page with shceme url in webview of your app, then you need to replace the default method to handle scheme url with routine:
 ``` java

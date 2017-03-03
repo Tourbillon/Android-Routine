@@ -160,7 +160,7 @@ final class Utils {
    * @return resolved scheme url
    */
   static String resolveSchemeUrl(String schemeUrl) {
-    int index = schemeUrl.lastIndexOf("?");
+    int index = checkNotNull(schemeUrl, "schemeUrl == null").lastIndexOf("?");
     return index > 0 ? schemeUrl.substring(0, index) : schemeUrl;
   }
 }
