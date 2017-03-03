@@ -33,6 +33,7 @@
     </activity>
     <activity android:name=".ui.LoginActivity"/>
     <activity android:name=".ui.IdentityActivity"/>
+    <activity android:name=".ui.FilterActivity"/>
     <activity android:name=".ui.HtmlActivity"/>
     <activity android:name=".ui.ErrorActivity"/>
   </application>

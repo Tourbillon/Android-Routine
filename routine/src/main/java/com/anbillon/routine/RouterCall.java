@@ -12,29 +12,39 @@ import java.util.List;
 final class RouterCall {
   private final RouterMethod routerMethod;
   private final List<Interceptor> interceptors;
+  private final List<Filter> filters;
   private final Object[] args;
 
-  RouterCall(RouterMethod routerMethod, List<Interceptor> interceptors, Object[] args) {
+  RouterCall(RouterMethod routerMethod, List<Interceptor> interceptors, List<Filter> filters,
+      Object[] args) {
     this.routerMethod = routerMethod;
     this.interceptors = interceptors;
+    this.filters = filters;
     this.args = args;
   }
 
   Object create() {
-    Router originCall = routerMethod.toRouter(args);
+    Router originRouter = routerMethod.toRouter(args);
+
+    /* build filters with matcher */
+    Matcher matcher = new Matcher.Builder().build();
+    FilterChain filterChain = new FilterChain(filters, 0, matcher);
+    Matcher realMatcher = filterChain.proceed(matcher);
+    FiltersInterceptor filtersInterceptor = new FiltersInterceptor(realMatcher);
 
     /* build a full stack of interceptors */
     List<Interceptor> fullInterceptors = new ArrayList<>();
     fullInterceptors.add(new RealInterceptor());
+    fullInterceptors.add(filtersInterceptor);
     fullInterceptors.addAll(interceptors);
-    Interceptor.Chain chain = new InterceptorChain(fullInterceptors, 0, originCall);
+    Interceptor.Chain interceptorChain = new InterceptorChain(fullInterceptors, 0, originRouter);
     /* proceed the chain to get real router call */
-    Router realCall = chain.proceed(originCall);
+    Router realRouter = interceptorChain.proceed(originRouter);
     Type returnType = routerMethod.returnType();
     if (returnType == void.class) {
-      realCall.start();
+      realRouter.start();
     } else if (returnType == Router.class) {
-      return realCall;
+      return realRouter;
     } else {
       throw new IllegalStateException("Unsupported return type.");
     }

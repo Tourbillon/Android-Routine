@@ -29,11 +29,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class Routine {
   private final Map<Method, RouterMethod> routerMethodCache = new ConcurrentHashMap<>();
   private final List<Interceptor> interceptors;
+  private final List<Filter> filters;
   private final Class<?> errorPage;
 
   private Routine(Builder builder) {
-    interceptors = Utils.immutableList(builder.interceptors);
-    errorPage = builder.errorPage;
+    this.interceptors = Utils.immutableList(builder.interceptors);
+    this.filters = Utils.immutableList(builder.filters);
+    this.errorPage = builder.errorPage;
   }
 
   /**
@@ -75,7 +77,7 @@ public final class Routine {
             }
 
             RouterMethod routerMethod = loadRouterMethod(method);
-            RouterCall routerCall = new RouterCall(routerMethod, interceptors, args);
+            RouterCall routerCall = new RouterCall(routerMethod, interceptors, filters, args);
             return routerCall.create();
           }
         });
@@ -115,6 +117,7 @@ public final class Routine {
 
   public static final class Builder {
     private List<Interceptor> interceptors = new ArrayList<>();
+    private List<Filter> filters = new ArrayList<>();
     private Class<?> errorPage;
 
     public Builder() {
@@ -124,10 +127,21 @@ public final class Routine {
      * Add one {@link Interceptor} .
      *
      * @param interceptor {@link Interceptor}
-     * @return this builder for further chaining
+     * @return this object for further chaining
      */
     public Builder addInterceptor(Interceptor interceptor) {
       interceptors.add(interceptor);
+      return this;
+    }
+
+    /**
+     * Add one {@link Filter} into current router.
+     *
+     * @param filter {@link Filter}
+     * @return this object for further chaining
+     */
+    public Builder addFilter(Filter filter) {
+      filters.add(filter);
       return this;
     }
 

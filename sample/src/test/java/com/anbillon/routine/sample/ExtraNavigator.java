@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.anbillon.routine.app.Caller;
 import com.anbillon.routine.app.Extra;
 import com.anbillon.routine.app.Page;
+import com.anbillon.routine.app.SchemeUrl;
 import com.anbillon.routine.sample.ui.DemoActivity;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -88,4 +89,6 @@ public interface ExtraNavigator {
 
   @Page(DemoActivity.class) void withParcelableList(@Caller Context context,
       @Extra(EXTRA) ArrayList<ParcelableExtra> extra);
+
+  @SchemeUrl("demo://test/login?id=2") void withSchemeUrl(@Caller Context context);
 }

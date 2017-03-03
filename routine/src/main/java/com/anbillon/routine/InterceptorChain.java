@@ -25,7 +25,7 @@ final class InterceptorChain implements Interceptor.Chain {
 
   @Override public Router proceed(Router router) {
     if (router == null) {
-      throw new IllegalArgumentException("RouterCall in interceptor can not be null.");
+      throw new IllegalArgumentException("Router in interceptor can not be null.");
     }
 
     if (index == 0 && interceptors.size() == 0 || index >= interceptors.size()) {

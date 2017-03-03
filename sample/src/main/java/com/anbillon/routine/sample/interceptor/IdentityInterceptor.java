@@ -17,7 +17,7 @@ public final class IdentityInterceptor implements Interceptor {
   @Override public Router intercept(Chain chain) {
     Router router = chain.router();
     Router.Builder builder = router.newBuilder();
-    if (random(5) == 0) {
+    if (random(6) == 0) {
       Intent intent = new Intent(router.context(), IdentityActivity.class);
       builder.intent(intent).requestCode(-1);
     }
