@@ -18,4 +18,9 @@ public final class DemoActivity extends AppCompatActivity {
     TextView textView = (TextView) findViewById(R.id.sample_tv);
     textView.setText("Demo page");
   }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    setResult(RESULT_OK);
+  }
 }

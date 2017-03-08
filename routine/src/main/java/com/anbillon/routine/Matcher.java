@@ -39,7 +39,6 @@ public final class Matcher {
 
     if (pages != null && !pages.isEmpty()) {
       Intent intent = new Intent();
-
       for (Class<?> page : pages) {
         intent.setClass(context, page);
         if (resolveActivityInfo(context, intent) != null) {
@@ -75,6 +74,7 @@ public final class Matcher {
         newPages.add(page);
         pagesMap.put(schemeUrl, newPages);
       }
+
       return this;
     }
 

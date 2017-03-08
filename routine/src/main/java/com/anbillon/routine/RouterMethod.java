@@ -1,6 +1,5 @@
 package com.anbillon.routine;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.anbillon.routine.app.Caller;
@@ -115,7 +114,7 @@ final class RouterMethod {
       }
 
       if (!gotCaller) {
-        throw methodError("A call must contain one @Caller.");
+        throw methodError("A router must contain one @Caller.");
       }
 
       return new RouterMethod(this);
@@ -146,11 +145,7 @@ final class RouterMethod {
 
         gotCaller = true;
 
-        if (type == Context.class) {
-          return new ParameterHandler.Caller();
-        } else {
-          throw parameterError(p, "@Caller must be android.content.Context type.");
-        }
+        return new ParameterHandler.Caller(routine);
       }
 
       if (annotation instanceof RequestCode) {

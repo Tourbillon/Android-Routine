@@ -34,11 +34,12 @@ final class RouterCall {
 
     /* build a full stack of interceptors */
     List<Interceptor> fullInterceptors = new ArrayList<>();
-    fullInterceptors.add(new RealInterceptor());
+    fullInterceptors.add(new BridgeInterceptor());
     fullInterceptors.add(filtersInterceptor);
     fullInterceptors.addAll(interceptors);
+    fullInterceptors.add(new RealInterceptor());
     Interceptor.Chain interceptorChain = new InterceptorChain(fullInterceptors, 0, originRouter);
-    /* proceed the chain to get real router call */
+    /* proceed the chain to get real router */
     Router realRouter = interceptorChain.proceed(originRouter);
     Type returnType = routerMethod.returnType();
     if (returnType == void.class) {

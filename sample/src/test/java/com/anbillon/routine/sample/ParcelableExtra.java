@@ -18,7 +18,7 @@ public final class ParcelableExtra implements Parcelable {
   }
 
   @Override public String toString() {
-    return "{name=" + name + "}";
+    return "{callerName=" + name + "}";
   }
 
   public static final Creator<ParcelableExtra> CREATOR = new Creator<ParcelableExtra>() {

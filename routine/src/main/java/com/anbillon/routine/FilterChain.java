@@ -25,10 +25,10 @@ final class FilterChain implements Filter.Chain {
 
   @Override public Matcher proceed(Matcher matcher) {
     if (matcher == null) {
-      throw new IllegalArgumentException("Matcher in filter can not be null.");
+      throw new IllegalArgumentException("Matcher in filter must not be null.");
     }
 
-    if (index == 0 && filters.size() == 0 || index >= filters.size()) {
+    if (index >= filters.size()) {
       return matcher;
     }
 

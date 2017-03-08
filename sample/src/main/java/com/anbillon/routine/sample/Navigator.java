@@ -2,6 +2,7 @@ package com.anbillon.routine.sample;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import com.anbillon.routine.app.Caller;
 import com.anbillon.routine.app.Extra;
 import com.anbillon.routine.app.Flags;
@@ -38,10 +39,8 @@ public interface Navigator {
 
   /**
    * Navigate to {@link DemoActivity} with activity page.
-   *
-   * @param context context to use
    */
-  @Page(DemoActivity.class) void navigateToDemoWithPage(@Caller Context context);
+  @Page(DemoActivity.class) void navigateToDemoWithPage(@Caller Fragment fragment);
 
   /**
    * Navigate to a page but not found.

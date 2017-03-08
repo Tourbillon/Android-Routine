@@ -79,7 +79,7 @@ navigator.navigateToDemoWithPage(this);
       </intent-filter>
 </activity>
 ```
-* However, it's not safe to add scheme in AndroidManifest.xml. Maybe you only want to make navigationjust inside in your app , then you  can add `Filter` to routine, one scheme url can map to many page, one page can map to many scheme urls too. The routine will open the first page which is available:
+* However, it's not safe to add scheme in AndroidManifest.xml. Maybe you only want to make navigation just inside in your app , then you  can add `Filter` to routine, one scheme url can map to many page, one page can map to many scheme urls too. The routine will open the first page which is available:
 ``` java
 public final class SchemeFilter implements Filter {
 

@@ -26,7 +26,7 @@ public class LoggingTest {
 
   @Test public void testLogging() throws Exception {
     navigator.navigateWithSchemeUrl(context);
-    navigator.navigateWithPageName(context, 2, 1212);
+    navigator.navigateWithPageName(context, 2);
     navigator.navigateWithPage(context);
   }
 }

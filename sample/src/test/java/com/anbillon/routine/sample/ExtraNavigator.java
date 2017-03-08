@@ -2,13 +2,11 @@ package com.anbillon.routine.sample;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import com.anbillon.routine.app.Caller;
 import com.anbillon.routine.app.Extra;
 import com.anbillon.routine.app.Page;
 import com.anbillon.routine.app.SchemeUrl;
 import com.anbillon.routine.sample.ui.DemoActivity;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -67,16 +65,16 @@ public interface ExtraNavigator {
   @Page(DemoActivity.class) void withBundle(@Caller Context context, @Extra(EXTRA) Bundle extra);
 
   @Page(DemoActivity.class) void withParcelable(@Caller Context context,
-      @Extra(EXTRA) Parcelable extra);
+      @Extra(EXTRA) ParcelableExtra extra);
 
   @Page(DemoActivity.class) void withParcelableArray(@Caller Context context,
-      @Extra(EXTRA) Parcelable[] extra);
+      @Extra(EXTRA) ParcelableExtra[] extra);
 
   @Page(DemoActivity.class) void withSerializable(@Caller Context context,
-      @Extra(EXTRA) Serializable extra);
+      @Extra(EXTRA) SerializableExtra extra);
 
   @Page(DemoActivity.class) void withSerializableArray(@Caller Context context,
-      @Extra(EXTRA) Serializable[] extra);
+      @Extra(EXTRA) SerializableExtra[] extra);
 
   @Page(DemoActivity.class) void withCharSequenceList(@Caller Context context,
       @Extra(EXTRA) ArrayList<CharSequence> extra);

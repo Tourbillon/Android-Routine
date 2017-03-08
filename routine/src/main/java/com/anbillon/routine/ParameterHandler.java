@@ -1,6 +1,5 @@
 package com.anbillon.routine;
 
-import android.content.Context;
 import java.lang.reflect.Type;
 
 /**
@@ -11,13 +10,19 @@ import java.lang.reflect.Type;
 abstract class ParameterHandler<T> {
   abstract void apply(RouterBuilder builder, T value) throws IllegalArgumentException;
 
-  static final class Caller extends ParameterHandler<Context> {
-    @Override void apply(RouterBuilder builder, Context value) throws IllegalArgumentException {
+  static final class Caller<T> extends ParameterHandler<T> {
+    private final Routine routine;
+
+    public Caller(Routine routine) {
+      this.routine = routine;
+    }
+
+    @Override void apply(RouterBuilder builder, T value) throws IllegalArgumentException {
       if (value == null) {
         throw new IllegalArgumentException("Caller parameter value must not be null.");
       }
 
-      builder.caller(value);
+      builder.caller(routine.resolver(value));
     }
   }
 

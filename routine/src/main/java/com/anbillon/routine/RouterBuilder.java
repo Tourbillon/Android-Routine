@@ -19,15 +19,15 @@ import static com.anbillon.routine.Utils.getRawType;
 final class RouterBuilder {
   private final Intent intent;
   private Method method;
-  private String target;
+  private String destination;
   private String schemeUrl;
   private String pageName;
   private Class<?> page;
   private Class<?> errorPage;
-  private Context context;
+  private Resolver resolver;
   private int requestCode = -1;
 
-  public RouterBuilder(Class<?> errorPage) {
+  RouterBuilder(Class<?> errorPage) {
     this.errorPage = errorPage;
     this.intent = new Intent();
   }
@@ -40,18 +40,18 @@ final class RouterBuilder {
   void schemeUrl(String schemeUrl) {
     this.schemeUrl = schemeUrl;
     this.method = Method.SCHEME_URL;
-    this.target = schemeUrl;
+    this.destination = schemeUrl;
   }
 
   /**
-   * Add page target into current call if existed.
+   * Add page destination into current call if existed.
    *
-   * @param pageName page name
+   * @param pageName page callerName
    */
   void pageName(String pageName) {
     this.pageName = pageName;
     this.method = Method.PAGE_NAME;
-    this.target = pageName;
+    this.destination = pageName;
   }
 
   /**
@@ -62,7 +62,7 @@ final class RouterBuilder {
   void page(Class<?> page) {
     this.page = page;
     this.method = Method.PAGE;
-    this.target = page.getCanonicalName();
+    this.destination = page.getCanonicalName();
   }
 
   /**
@@ -82,10 +82,10 @@ final class RouterBuilder {
   /**
    * Add {@link Context} caller into this call.
    *
-   * @param context {@link Context}
+   * @param resolver {@link Resolver}
    */
-  void caller(Context context) {
-    this.context = context;
+  void caller(Resolver resolver) {
+    this.resolver = resolver;
   }
 
   /**
@@ -100,7 +100,7 @@ final class RouterBuilder {
   /**
    * Put extended data into {@link Intent}.
    *
-   * @param name target of extra
+   * @param name destination of extra
    * @param type parameter type
    * @param value value to add
    * @param <T> type of @{code value}
@@ -109,51 +109,30 @@ final class RouterBuilder {
     Class<?> rawParameterType = getRawType(type);
     if (rawParameterType == boolean.class) {
       intent.putExtra(name, Boolean.parseBoolean(value.toString()));
-    } else if (rawParameterType == boolean[].class) {
-      intent.putExtra(name, (boolean[]) value);
     } else if (rawParameterType == byte.class) {
       intent.putExtra(name, Byte.parseByte(value.toString()));
-    } else if (rawParameterType == byte[].class) {
-      intent.putExtra(name, (byte[]) value);
     } else if (rawParameterType == char.class) {
       intent.putExtra(name, value.toString().toCharArray()[0]);
-    } else if (rawParameterType == char[].class) {
-      intent.putExtra(name, (char[]) value);
     } else if (rawParameterType == CharSequence.class) {
       intent.putExtra(name, (CharSequence) value);
     } else if (rawParameterType == CharSequence[].class) {
       intent.putExtra(name, (CharSequence[]) value);
     } else if (rawParameterType == double.class) {
       intent.putExtra(name, Double.parseDouble(value.toString()));
-    } else if (rawParameterType == double[].class) {
-      intent.putExtra(name, (double[]) value);
     } else if (rawParameterType == float.class) {
       intent.putExtra(name, Float.parseFloat(value.toString()));
-    } else if (rawParameterType == float[].class) {
-      intent.putExtra(name, (float[]) value);
     } else if (rawParameterType == int.class) {
       intent.putExtra(name, Integer.parseInt(value.toString()));
-    } else if (rawParameterType == int[].class) {
-      intent.putExtra(name, (int[]) value);
     } else if (rawParameterType == long.class) {
       intent.putExtra(name, Long.parseLong(value.toString()));
-    } else if (rawParameterType == long[].class) {
-      intent.putExtra(name, (long[]) value);
     } else if (rawParameterType == short.class) {
       intent.putExtra(name, Short.parseShort(value.toString()));
-    } else if (rawParameterType == short[].class) {
-      intent.putExtra(name, (short[]) value);
-    } else if (rawParameterType == String.class) {
-      intent.putExtra(name, value.toString());
-    } else if (rawParameterType == String[].class) {
-      intent.putExtra(name, (String[]) value);
-    } else if (rawParameterType == Bundle.class) {
-      intent.putExtra(name, (Bundle) value);
     } else if (rawParameterType == Parcelable.class) {
       intent.putExtra(name, (Parcelable) value);
     } else if (rawParameterType == Parcelable[].class) {
       intent.putExtra(name, (Parcelable[]) value);
-    } else if (rawParameterType == Serializable.class) {
+    } else if (rawParameterType == Serializable.class
+        || rawParameterType.getEnumConstants() != null) {
       intent.putExtra(name, (Serializable) value);
     } else if (rawParameterType == Serializable[].class) {
       intent.putExtra(name, (Serializable[]) value);
@@ -163,7 +142,7 @@ final class RouterBuilder {
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
         if (actualTypeArguments == null || actualTypeArguments.length != 1) {
           throw new IllegalArgumentException(
-              "Unsupported type " + rawParameterType + " with target: " + name);
+              "Unsupported type " + rawParameterType + " with parameter: " + name);
         }
 
         Type actualTypeArgument = actualTypeArguments[0];
@@ -183,12 +162,12 @@ final class RouterBuilder {
           }
 
           throw new IllegalArgumentException(
-              "Unsupported type " + rawParameterType + " with target: " + name);
+              "Unsupported type " + rawParameterType + " with parameter: " + name);
         }
       }
     } else {
       throw new IllegalArgumentException(
-          "Unsupported type " + rawParameterType + " with target: " + name);
+          "Unsupported type " + rawParameterType + " with parameter: " + name);
     }
   }
 
@@ -210,12 +189,12 @@ final class RouterBuilder {
 
   Router build() {
     return new Router.Builder().method(method)
-        .target(target)
+        .destination(destination)
         .schemeUrl(schemeUrl)
         .pageName(pageName)
         .page(page)
         .errorPage(errorPage)
-        .context(context)
+        .resolver(resolver)
         .intent(intent)
         .requestCode(requestCode)
         .build();

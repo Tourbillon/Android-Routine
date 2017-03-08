@@ -32,19 +32,9 @@ public class RoutineTest {
     assertEquals("2", uri.getQueryParameter("id"));
   }
 
-  class ChildClass extends RoutineTest {
-  }
-
-  @Test public void testClassName() {
-    assertEquals("com.anbillon.routine.RoutineTest", getClass().getCanonicalName());
-    RoutineTest childClass = new ChildClass();
-    assertEquals("com.anbillon.routine.RoutineTest.ChildClass",
-        childClass.getClass().getCanonicalName());
-  }
-
   @Test public void testRoutine() throws Exception {
     navigator.navigateWithSchemeUrl(context);
-    navigator.navigateWithPageName(context, 2, 1212);
-    navigator.navigateWithPage(context);
+    navigator.navigateWithPageName(context, 2);
+    navigator.navigateWithPage(context, Gender.FEMALE);
   }
 }

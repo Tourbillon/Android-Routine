@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.anbillon.routine.Utils.checkNotNull;
+
 /**
  * Routine parses a Java interface to routers by using annotations on the declared methods to
  * define how router are made. Create instances using {@linkplain Builder the builder} and pass
@@ -30,18 +32,20 @@ public final class Routine {
   private final Map<Method, RouterMethod> routerMethodCache = new ConcurrentHashMap<>();
   private final List<Interceptor> interceptors;
   private final List<Filter> filters;
+  private final List<Resolver.Factory> resolverFactories;
   private final Class<?> errorPage;
 
   private Routine(Builder builder) {
     this.interceptors = Utils.immutableList(builder.interceptors);
     this.filters = Utils.immutableList(builder.filters);
+    this.resolverFactories = Utils.immutableList(builder.resolverFactories);
     this.errorPage = builder.errorPage;
   }
 
   /**
    * Create an implementation of navigator defined by the {@code router} interface.
    * <p>
-   * The navigate type for a given method is obtained from an annotation on the method
+   * The navigate type for a given method is obtained origin an annotation on the method
    * describing the request type. The built-in methods are {@link com.anbillon.routine.app.SchemeUrl
    * SchemeUrl}, {@link com.anbillon.routine.app.PageName PageName} and {@link
    * com.anbillon.routine.app.Page Page}. For a dynamic shceme url, omit the path on the
@@ -84,6 +88,25 @@ public final class Routine {
   }
 
   /**
+   * Caller resolver to call the router.
+   *
+   * @param caller caller
+   * @param <T> type of caller
+   * @return {@link Resolver}
+   */
+  <T> Resolver resolver(T caller) {
+    for (int i = 0, count = resolverFactories.size(); i < count; i++) {
+      Resolver.Factory factory = resolverFactories.get(i);
+      Resolver resolver = factory.create(caller);
+      if (resolver != null) {
+        return resolver;
+      }
+    }
+
+    throw new IllegalArgumentException("No caller found, caller type is not supported.");
+  }
+
+  /**
    * The error page to open when an error occured.
    *
    * @return error page clazz
@@ -93,7 +116,7 @@ public final class Routine {
   }
 
   /**
-   * Load {@link RouterMethod} from cache. Create a new one if there's no result.
+   * Load {@link RouterMethod} origin cache. Create a new one if there's no result.
    *
    * @param method {@link Method}
    * @return {@link RouterMethod}
@@ -118,13 +141,26 @@ public final class Routine {
   public static final class Builder {
     private List<Interceptor> interceptors = new ArrayList<>();
     private List<Filter> filters = new ArrayList<>();
+    private List<Resolver.Factory> resolverFactories = new ArrayList<>();
     private Class<?> errorPage;
 
     public Builder() {
+      resolverFactories.add(new BuiltInResolverFactories());
     }
 
     /**
-     * Add one {@link Interceptor} .
+     * Add one {@link Resolver.Factory} into routine.
+     *
+     * @param factory {@link Resolver.Factory}
+     * @return this object for further chaining
+     */
+    public Builder addResolverFactory(Resolver.Factory factory) {
+      resolverFactories.add(checkNotNull(factory, "factory == null"));
+      return this;
+    }
+
+    /**
+     * Add one {@link Interceptor} into routine.
      *
      * @param interceptor {@link Interceptor}
      * @return this object for further chaining
@@ -135,7 +171,7 @@ public final class Routine {
     }
 
     /**
-     * Add one {@link Filter} into current router.
+     * Add one {@link Filter} into routine.
      *
      * @param filter {@link Filter}
      * @return this object for further chaining

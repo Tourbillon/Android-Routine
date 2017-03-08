@@ -3,6 +3,8 @@ package com.anbillon.routine;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.Parcelable;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
@@ -56,7 +58,7 @@ final class Utils {
     }
 
     /*
-     * Prevent API interfaces from extending other interfaces. This not only avoids a bug in
+     * Prevent API interfaces origin extending other interfaces. This not only avoids a bug in
      * Android (http://b.android.com/58753) but it forces composition of API declarations which is
      * the recommended pattern.
      */
@@ -101,13 +103,30 @@ final class Utils {
         + className);
   }
 
+  static boolean isSerializableType(Class<?> type) {
+    return type == Serializable.class
+        || type == Serializable[].class
+        || type == Parcelable.class
+        || type == Parcelable[].class;
+  }
+
   static Class<?> getRawType(Type type) {
     if (type == null) throw new NullPointerException("type == null");
 
     if (type instanceof Class<?>) {
+      Class<?>[] interfaces = ((Class<?>) type).getInterfaces();
+      if (interfaces.length != 0) {
+        for (Class<?> ininterfaceClazz : interfaces) {
+          if (isSerializableType(ininterfaceClazz)) {
+            return ininterfaceClazz;
+          }
+        }
+      }
+
       /* type is a normal class */
       return (Class<?>) type;
     }
+
     if (type instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) type;
 
@@ -119,10 +138,12 @@ final class Utils {
       if (!(rawType instanceof Class)) throw new IllegalArgumentException();
       return (Class<?>) rawType;
     }
+
     if (type instanceof GenericArrayType) {
       Type componentType = ((GenericArrayType) type).getGenericComponentType();
       return Array.newInstance(getRawType(componentType), 0).getClass();
     }
+
     if (type instanceof TypeVariable) {
       /*
        * We could use the variable's bounds, but that won't work if there are multiple. Having a raw
@@ -130,6 +151,7 @@ final class Utils {
        */
       return Object.class;
     }
+
     if (type instanceof WildcardType) {
       return getRawType(((WildcardType) type).getUpperBounds()[0]);
     }

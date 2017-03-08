@@ -1,6 +1,5 @@
 package com.anbillon.routine;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -15,24 +14,24 @@ import static com.anbillon.routine.Utils.checkNotNull;
  */
 public final class Router {
   private final Method method;
-  private final String target;
+  private final String destination;
   private final String schemeUrl;
   private final String pageName;
   private final Class<?> page;
   private final Class<?> errorPage;
-  private final Context context;
+  private final Resolver resolver;
   private final Intent intent;
   private final int requestCode;
 
   private Router(Builder builder) {
     this.method = builder.method;
-    this.target = builder.target;
+    this.destination = builder.target;
     this.schemeUrl = builder.schemeUrl;
     this.pageName = builder.pageName;
     this.page = builder.page;
     this.errorPage = builder.errorPage;
-    this.context = checkNotNull(builder.context, "context == null");
-    this.intent = checkNotNull(builder.intent, "intent == null");
+    this.resolver = builder.resolver;
+    this.intent = checkNotNull(builder.intent, "intent == null in Router");
     this.requestCode = builder.requestCode;
   }
 
@@ -40,20 +39,12 @@ public final class Router {
    * Start current router call to open new page.
    */
   public boolean start() {
-    boolean isActivity = context instanceof Activity;
-
     try {
       if (requestCode >= 0) {
-        if (isActivity) {
-          ((Activity) context).startActivityIfNeeded(intent, requestCode);
-        }
+        resolver.startActivityForResult(intent, requestCode);
       } else {
-        if (isActivity) {
-          ((Activity) context).startActivityIfNeeded(intent, -1);
-        } else {
-          intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-          context.startActivity(intent);
-        }
+        intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        resolver.startActivity(intent);
       }
     } catch (ActivityNotFoundException ignore) {
       return false;
@@ -66,8 +57,12 @@ public final class Router {
     return method;
   }
 
-  public String target() {
-    return target;
+  public String origin() {
+    return resolver.callerName();
+  }
+
+  public String destination() {
+    return destination;
   }
 
   String schemeUrl() {
@@ -87,7 +82,7 @@ public final class Router {
   }
 
   public Context context() {
-    return context;
+    return resolver.context();
   }
 
   public Intent intent() {
@@ -109,23 +104,23 @@ public final class Router {
     private String pageName;
     private Class<?> page;
     private Class<?> errorPage;
-    private Context context;
+    private Resolver resolver;
     private Intent intent;
     private int requestCode;
 
     Builder() {
     }
 
-    Builder(Router call) {
-      this.method = call.method;
-      this.target = call.target;
-      this.schemeUrl = call.schemeUrl;
-      this.pageName = call.pageName;
-      this.page = call.page;
-      this.errorPage = call.errorPage;
-      this.context = call.context;
-      this.intent = call.intent;
-      this.requestCode = call.requestCode;
+    Builder(Router router) {
+      this.method = router.method;
+      this.target = router.destination;
+      this.schemeUrl = router.schemeUrl;
+      this.pageName = router.pageName;
+      this.page = router.page;
+      this.errorPage = router.errorPage;
+      this.resolver = router.resolver;
+      this.intent = router.intent;
+      this.requestCode = router.requestCode;
     }
 
     Builder method(Method method) {
@@ -133,8 +128,8 @@ public final class Router {
       return this;
     }
 
-    Builder target(String target) {
-      this.target = target;
+    Builder destination(String destination) {
+      this.target = destination;
       return this;
     }
 
@@ -158,8 +153,8 @@ public final class Router {
       return this;
     }
 
-    Builder context(Context context) {
-      this.context = context;
+    Builder resolver(Resolver resolver) {
+      this.resolver = resolver;
       return this;
     }
 
